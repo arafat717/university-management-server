@@ -23,7 +23,6 @@ const userNameSchema = new Schema<userName>({
 });
 const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
   {
-    id: { type: String, required: true },
     user: {
       type: Schema.Types.ObjectId,
       required: [true, "User id is required"],
