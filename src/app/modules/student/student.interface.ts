@@ -29,6 +29,7 @@ export type TStudent = {
   gender: "male" | "female";
   presentAddress: string;
   permanentAddress: string;
+  admissionSemester: Types.ObjectId;
   gurdian: Gurdian;
 };
 

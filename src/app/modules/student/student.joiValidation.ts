@@ -62,6 +62,7 @@ const createStudentValidationSchema = z.object({
       permanentAddress: z.string({
         required_error: "Permanent address is required",
       }),
+      admissionSemester: z.string(),
       gurdian: GuardianSchema,
       isActive: z.enum(["active", "blocked"]).default("active"),
     }),

@@ -50,6 +50,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
       required: true,
     },
     presentAddress: { type: String, required: true },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: "AcademicSemesterModel",
+    },
     permanentAddress: { type: String, required: true },
     gurdian: { type: GurdianSchema, required: true },
   },
