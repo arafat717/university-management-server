@@ -52,7 +52,11 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
     presentAddress: { type: String, required: true },
     admissionSemester: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicSemesterModel",
+      ref: "AcademicSemester",
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: "AcademicDepartment",
     },
     permanentAddress: { type: String, required: true },
     gurdian: { type: GurdianSchema, required: true },
