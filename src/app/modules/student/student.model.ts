@@ -33,11 +33,15 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
       type: userNameSchema,
       required: true,
     },
+    id: {
+      type: String,
+      required: true,
+    },
     email: { type: String, required: true, unique: true },
     dateOfBirth: { type: String },
     bloodGroup: {
       type: String,
-      enum: ["A", "B", "AB", "O"],
+      enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     },
     contactNo: { type: String, required: true },
     emergencyContactNo: { type: String, required: true, unique: true },
@@ -53,6 +57,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
     admissionSemester: {
       type: Schema.Types.ObjectId,
       ref: "AcademicSemester",
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
     },
     academicDepartment: {
       type: Schema.Types.ObjectId,

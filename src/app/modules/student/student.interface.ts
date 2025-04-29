@@ -23,13 +23,14 @@ export type TStudent = {
   name: userName;
   email: string;
   dateOfBirth: string;
-  bloodGroup?: "A" | "B" | "AB" | "O";
+  bloodGroup?: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
   contactNo: string;
   emergencyContactNo: string;
   gender: "male" | "female";
   presentAddress: string;
   permanentAddress: string;
   admissionSemester: Types.ObjectId;
+  isDeleted: boolean;
   academicDepartment: Types.ObjectId;
   gurdian: Gurdian;
 };
