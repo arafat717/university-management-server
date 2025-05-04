@@ -6,71 +6,18 @@ import AppError from "../../error/AppError";
 import status from "http-status";
 import { User } from "../user/user.model";
 import { TStudent } from "./student.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { studentSearchableFeilds } from "./students.constant";
 
 const getAllStudentFromDb = async (query: Record<string, unknown>) => {
-  let searchTerm = "";
-  const queryObj = { ...query };
-
-  const studentSearchableFeilds = ["email", "name.firstName", "presentAddress"];
-
-  if (query?.searchTerm) {
-    searchTerm = query.searchTerm as string;
-  }
-
-  const searchQuery = Student.find({
-    $or: studentSearchableFeilds.map((field) => ({
-      [field]: { $regex: searchTerm, $options: "i" },
-    })),
-  });
-
-  //filtering
-  const excludeFields = ["searchTerm", "sort", "limit", "page", "fields"];
-
-  excludeFields.forEach((el) => delete queryObj[el]);
-
-  const filterQuery = searchQuery
-    .find(queryObj)
-    .populate("admissionSemester")
-    .populate({
-      path: "academicDepartment",
-      populate: {
-        path: "academicFaculty",
-      },
-    });
-
-  let sort = "-createdAt";
-
-  if (query.sort) {
-    sort = query.sort as string;
-  }
-
-  const sortQuery = filterQuery.sort(sort);
-
-  let limit = 1;
-  let page = 1;
-  let skip = 1;
-
-  if (query.limit) {
-    limit = Number(query.limit);
-  }
-
-  const paginationQuery = sortQuery.skip(skip);
-
-  if (query.page) {
-    page = Number(query.page);
-    skip = (page - 1) * limit;
-  }
-
-  const limitQuery = paginationQuery.limit(limit);
-
-  let fields = "--v";
-  if (query.fields) {
-    fields = (query.fields as string).split(",").join(" ");
-  }
-
-  const fieldQuery = await limitQuery.select(fields);
-
-  return fieldQuery;
+  const studentQuery = new QueryBuilder(Student.find(), query)
+    .search(studentSearchableFeilds)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await studentQuery.modelQuery;
+  return result;
 };
 
 const getSingleStudentFromDb = async (id: string) => {
