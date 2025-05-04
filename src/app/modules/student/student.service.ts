@@ -11,22 +11,24 @@ const getAllStudentFromDb = async (query: Record<string, unknown>) => {
   let searchTerm = "";
   const queryObj = { ...query };
 
+  const studentSearchableFeilds = ["email", "name.firstName", "presentAddress"];
+
   if (query?.searchTerm) {
     searchTerm = query.searchTerm as string;
   }
 
   const searchQuery = Student.find({
-    $or: ["email", "name.firstName", "presentAddress"].map((field) => ({
+    $or: studentSearchableFeilds.map((field) => ({
       [field]: { $regex: searchTerm, $options: "i" },
     })),
   });
 
   //filtering
-  const excludeFields = ["searchTerm"];
+  const excludeFields = ["searchTerm", "sort", "limit"];
 
   excludeFields.forEach((el) => delete queryObj[el]);
 
-  const result = await searchQuery
+  const filterQuery = searchQuery
     .find(queryObj)
     .populate("admissionSemester")
     .populate({
@@ -35,7 +37,23 @@ const getAllStudentFromDb = async (query: Record<string, unknown>) => {
         path: "academicFaculty",
       },
     });
-  return result;
+
+  let sort = "-createdAt";
+
+  if (query.sort) {
+    sort = query.sort as string;
+  }
+
+  const sortQuery = filterQuery.sort(sort);
+
+  let limit = 1;
+  if (query.limit) {
+    limit = query.limit as number;
+  }
+
+  const limitQuery = await sortQuery.limit(limit);
+
+  return limitQuery;
 };
 
 const getSingleStudentFromDb = async (id: string) => {
