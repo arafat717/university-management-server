@@ -9,4 +9,5 @@ export default {
   database_url: process.env.MONGODB_URL,
   student_pass: process.env.USER_PASSWORD,
   bcrypt_rount: process.env.BCRYPT_ROUNT,
+  default_password: process.env.DEFAULT_PASS,
 };
