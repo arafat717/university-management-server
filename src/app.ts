@@ -10,6 +10,7 @@ import { academicFacultyRoute } from "./app/modules/academicFaculty/academicFacu
 import { academicDepartmentRoute } from "./app/modules/academicDepartment/academicDepartment.route";
 import { FacultyRoutes } from "./app/modules/faculty/faculty.route";
 import { AdminRoutes } from "./app/modules/admim/admin.route";
+import { courseRoute } from "./app/modules/Course/course.route";
 
 app.use(express.json());
 app.use(cors());
@@ -22,6 +23,7 @@ app.use("/api/v1/academic-faculty", academicFacultyRoute);
 app.use("/api/v1/academic-department", academicDepartmentRoute);
 app.use("/api/v1/faculties", FacultyRoutes);
 app.use("/api/v1/admins", AdminRoutes);
+app.use("/api/v1/courses", courseRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("server is running");
