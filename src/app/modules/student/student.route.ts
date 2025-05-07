@@ -6,12 +6,12 @@ import { studentValidations } from "./student.joiValidation";
 const router = express.Router();
 
 router.get("/", StudentControllers.getAllStudent);
-router.get("/:studentId", StudentControllers.getSingleStudent);
+router.get("/:id", StudentControllers.getSingleStudent);
 router.patch(
-  "/:studentId",
+  "/:id",
   validateRequest(studentValidations.updateStudentValidationSchema),
   StudentControllers.updateStudent
 );
-router.delete("/:studentId", StudentControllers.deleteStudent);
+router.delete("/:id", StudentControllers.deleteStudent);
 
 export const StudentRoute = router;

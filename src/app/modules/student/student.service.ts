@@ -31,7 +31,7 @@ const getAllStudentFromDb = async (query: Record<string, unknown>) => {
 };
 
 const getSingleStudentFromDb = async (id: string) => {
-  const result = await Student.findOne({ id }, { isDeleted: false })
+  const result = await Student.findById(id, { isDeleted: false })
     .populate("admissionSemester")
     .populate({
       path: "academicDepartment",
@@ -61,7 +61,7 @@ const updateStudentIntoDb = async (id: string, payload: Partial<TStudent>) => {
     }
   }
 
-  const result = await Student.findOneAndUpdate({ id }, modifiedUpdatedData, {
+  const result = await Student.findByIdAndUpdate(id, modifiedUpdatedData, {
     new: true,
     runValidators: true,
   });
@@ -73,8 +73,8 @@ const deletestudentFromDb = async (id: string) => {
 
   try {
     session.startTransaction();
-    const deleteStudent = await Student.findOneAndUpdate(
-      { id },
+    const deleteStudent = await Student.findByIdAndUpdate(
+      id,
       { isDeleted: true },
       { new: true, session }
     );
@@ -82,8 +82,11 @@ const deletestudentFromDb = async (id: string) => {
       throw new AppError(status.BAD_REQUEST, "Failed to create student");
     }
 
+    // get user _id from deletedFaculty
+    const userId = deleteStudent.user;
+
     const deleteUser = await User.findOneAndUpdate(
-      { id },
+      userId,
       { isDeleted: true },
       { new: true, session }
     );
