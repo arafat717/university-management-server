@@ -50,6 +50,14 @@ const updateCourseIntoDb = async (id: string, payload: Partial<TCourse>) => {
       runValidators: true,
     }
   );
+
+  if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+    const deletedPreRequisites = preRequisiteCourses.filter(
+      (el) => el.course && el.isDeleted
+    );
+    console.log(deletedPreRequisites);
+  }
+
   return updatedBasicCourseInfo;
 };
 
