@@ -36,10 +36,18 @@ export const updateCreateCoourseValidationSchema = z.object({
   }),
 });
 
+// Zod schema for TPreRequisiteCourses
+export const assignfacultiesWithCourseValidationSchema = z.object({
+  body: z.object({
+    faculties: z.array(z.string()),
+  }),
+});
+
 // const updateCreateCourseValidationSchema =
 //   createCoourseValidationSchema.partial();
 
 export const CourseValidations = {
   createCoourseValidationSchema,
   updateCreateCoourseValidationSchema,
+  assignfacultiesWithCourseValidationSchema,
 };

@@ -2,6 +2,7 @@ import express from "express";
 import validateRequest from "../../middlwares/validateRequest";
 import { CourseValidations } from "./course.validation";
 import { CourseController } from "./course.controller";
+import { valid } from "joi";
 
 const router = express.Router();
 
@@ -18,6 +19,12 @@ router.patch(
   "/:id",
   validateRequest(CourseValidations.updateCreateCoourseValidationSchema),
   CourseController.updateCourse
+);
+
+router.put(
+  "/:courseId/assign-faculties",
+  validateRequest(CourseValidations.assignfacultiesWithCourseValidationSchema),
+  CourseController.assignfaculltiesWithCourse
 );
 
 export const courseRoute = router;
