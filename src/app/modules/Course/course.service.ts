@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import mongoose from "mongoose";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { courseSearchableFields } from "./course.constant";
 import { TCourse } from "./course.interface";
@@ -43,37 +44,51 @@ const deleteCourseFromDb = async (id: string) => {
 const updateCourseIntoDb = async (id: string, payload: Partial<TCourse>) => {
   const { preRequisiteCourses, ...courseRemainingData } = payload;
 
-  // basic course info update
-  const updatedBasicCourseInfo = await Course.findByIdAndUpdate(
-    id,
-    courseRemainingData,
-    {
-      new: true,
-      runValidators: true,
-    }
-  );
+  const session = await mongoose.startSession();
 
-  if (preRequisiteCourses && preRequisiteCourses.length > 0) {
-    const deletedPreRequisites = preRequisiteCourses
-      .filter((el) => el.course && el.isDeleted)
-      .map((el) => el.course);
-    const deletedPreRequisitesCourses = await Course.findByIdAndUpdate(id, {
-      $pull: { preRequisiteCourses: { course: { $in: deletedPreRequisites } } },
-    });
+  try {
+    session.startTransaction();
 
-    const newPreRequisies = preRequisiteCourses.filter(
-      (el) => el.course && !el.isDeleted
+    // basic course info update
+    const updatedBasicCourseInfo = await Course.findByIdAndUpdate(
+      id,
+      courseRemainingData,
+      {
+        new: true,
+        runValidators: true,
+      }
     );
-    const newPreRequisieCourses = await Course.findByIdAndUpdate(id, {
-      $addToSet: { preRequisiteCourses: { $each: newPreRequisies } },
-    });
+
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+      const deletedPreRequisites = preRequisiteCourses
+        .filter((el) => el.course && el.isDeleted)
+        .map((el) => el.course);
+      const deletedPreRequisitesCourses = await Course.findByIdAndUpdate(id, {
+        $pull: {
+          preRequisiteCourses: { course: { $in: deletedPreRequisites } },
+        },
+      });
+
+      const newPreRequisies = preRequisiteCourses.filter(
+        (el) => el.course && !el.isDeleted
+      );
+      const newPreRequisieCourses = await Course.findByIdAndUpdate(id, {
+        $addToSet: { preRequisiteCourses: { $each: newPreRequisies } },
+      });
+    }
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    const result = await Course.findById(id).populate(
+      "preRequisiteCourses.course"
+    );
+
+    return result;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
   }
-
-  const result = await Course.findById(id).populate(
-    "preRequisiteCourses.course"
-  );
-
-  return result;
 };
 
 export const CourseService = {
