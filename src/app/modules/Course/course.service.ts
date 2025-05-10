@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import QueryBuilder from "../../builder/QueryBuilder";
 import { courseSearchableFields } from "./course.constant";
 import { TCourse } from "./course.interface";
@@ -52,12 +54,13 @@ const updateCourseIntoDb = async (id: string, payload: Partial<TCourse>) => {
   );
 
   if (preRequisiteCourses && preRequisiteCourses.length > 0) {
-    const deletedPreRequisites = preRequisiteCourses.filter(
-      (el) => el.course && el.isDeleted
-    );
-    console.log(deletedPreRequisites);
+    const deletedPreRequisites = preRequisiteCourses
+      .filter((el) => el.course && el.isDeleted)
+      .map((el) => el.course);
+    const deletedPreRequisitesCourses = await Course.findByIdAndUpdate(id, {
+      $pull: { preRequisiteCourses: { course: { $in: deletedPreRequisites } } },
+    });
   }
-
   return updatedBasicCourseInfo;
 };
 
