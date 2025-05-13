@@ -2,8 +2,6 @@ import express from "express";
 import validateRequest from "../../middlwares/validateRequest";
 import { CourseValidations } from "./course.validation";
 import { CourseController } from "./course.controller";
-import { valid } from "joi";
-
 const router = express.Router();
 
 router.post(
