@@ -3,6 +3,7 @@ import { AcademicSemester } from "../academicSemester/academicSemester.model";
 import { TSemisterRegistration } from "./semisterRegistration.interface";
 import status from "http-status";
 import { SemisterRegistration } from "./semisterRegistration.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const createSemisterRegistrationIntoDb = async (
   payload: TSemisterRegistration
@@ -27,9 +28,27 @@ const createSemisterRegistrationIntoDb = async (
   return result;
 };
 
-const getAllSemisterRegistrationFromDb = async () => {};
+const getAllSemisterRegistrationFromDb = async (
+  query: Record<string, unknown>
+) => {
+  const registrationQuery = new QueryBuilder(
+    SemisterRegistration.find().populate("academicSemester"),
+    query
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const result = await registrationQuery.modelQuery;
+  return result;
+};
 
-const getSingleSemisterRegistrationFromDb = async () => {};
+const getSingleSemisterRegistrationFromDb = async (id: string) => {
+  const result = await SemisterRegistration.findById(id).populate(
+    "academicSemester"
+  );
+  return result;
+};
 
 const updateSemisterRegistrationIntoDb = async () => {};
 
