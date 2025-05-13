@@ -6,7 +6,9 @@ import { SemisterRegistrationService } from "./semisterRegistration.service";
 
 const createSemisterRegistration = catchAsync(async (req, res) => {
   const result =
-    await SemisterRegistrationService.createSemisterRegistrationIntoDb();
+    await SemisterRegistrationService.createSemisterRegistrationIntoDb(
+      req.body
+    );
   sentResponse(res, {
     statusCode: status.OK,
     success: true,
