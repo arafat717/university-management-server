@@ -45,7 +45,10 @@ const getSingleSemisterRegistration = catchAsync(async (req, res) => {
 const updateSemisterRegistration = catchAsync(async (req, res) => {
   const { id } = req.params;
   const result =
-    await SemisterRegistrationService.updateSemisterRegistrationIntoDb(id);
+    await SemisterRegistrationService.updateSemisterRegistrationIntoDb(
+      id,
+      req.body
+    );
 
   sentResponse(res, {
     statusCode: status.OK,
