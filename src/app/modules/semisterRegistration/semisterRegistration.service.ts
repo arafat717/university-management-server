@@ -5,6 +5,8 @@ import status from "http-status";
 import { SemisterRegistration } from "./semisterRegistration.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 import { RegistrationStatus } from "./semisterRegistration.constant";
+import mongoose from "mongoose";
+import { OfferedCourse } from "../OfferedCourse/OfferedCourse.model";
 
 const createSemisterRegistrationIntoDb = async (
   payload: TSemisterRegistration
@@ -116,7 +118,55 @@ const updateSemisterRegistrationIntoDb = async (
   return result;
 };
 
+const deleteSemesterRegistrationFromDb = async (id: string) => {
+  const isSemesterRegistrationExists = await SemisterRegistration.findById(id);
+  // console.log(isSemesterRegistrationExists);
+  if (!isSemesterRegistrationExists) {
+    throw new AppError(status.NOT_FOUND, "Semester Registration not found");
+  }
+
+  if (isSemesterRegistrationExists.status !== "UPCOMING") {
+    throw new AppError(
+      status.NOT_FOUND,
+      `Semester Registration can not be update because it is ${isSemesterRegistrationExists.status}`
+    );
+  }
+
+  const session = await mongoose.startSession();
+
+  try {
+    session.startTransaction();
+
+    const deleteOfferedCourse = await OfferedCourse.findOneAndDelete(
+      {
+        semesterRegistration: id,
+      },
+      { session }
+    );
+
+    const deleteRegistration = await SemisterRegistration.findByIdAndDelete(
+      id,
+      { session }
+    );
+
+    const deletedFields = {
+      deleteOfferedCourse,
+      deleteRegistration,
+    };
+
+    await session.commitTransaction();
+    await session.endSession();
+
+    return deletedFields;
+  } catch (err) {
+    await session.abortTransaction();
+    await session.endSession();
+    throw new AppError(status.INTERNAL_SERVER_ERROR, (err as Error).message);
+  }
+};
+
 export const SemisterRegistrationService = {
+  deleteSemesterRegistrationFromDb,
   createSemisterRegistrationIntoDb,
   updateSemisterRegistrationIntoDb,
   getSingleSemisterRegistrationFromDb,
