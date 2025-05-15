@@ -13,6 +13,7 @@ import { AdminRoutes } from "./app/modules/admim/admin.route";
 import { courseRoute } from "./app/modules/Course/course.route";
 import { semisterRegistrationRoute } from "./app/modules/semisterRegistration/semisterRegistration.route";
 import { OfferedCourseRoute } from "./app/modules/OfferedCourse/OfferedCourse.route";
+import { autheRoute } from "./app/modules/Auth/auth.route";
 
 app.use(express.json());
 app.use(cors());
@@ -28,6 +29,7 @@ app.use("/api/v1/admins", AdminRoutes);
 app.use("/api/v1/courses", courseRoute);
 app.use("/api/v1/registration", semisterRegistrationRoute);
 app.use("/api/v1/offeredcourse", OfferedCourseRoute);
+app.use("/api/v1/auth", autheRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("server is running");
