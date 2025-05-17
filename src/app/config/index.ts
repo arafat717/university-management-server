@@ -10,4 +10,5 @@ export default {
   student_pass: process.env.USER_PASSWORD,
   bcrypt_rount: process.env.BCRYPT_ROUNT,
   default_password: process.env.DEFAULT_PASS,
+  access_token: process.env.ACCESS_SCERET,
 };
