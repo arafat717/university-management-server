@@ -35,7 +35,7 @@ const loginUserIntoDb = async (payload: TLoginUser) => {
   // create accesstoken
 
   const accessPayload = {
-    userId: userExists,
+    userId: userExists.id,
     role: userExists.role,
   };
 
