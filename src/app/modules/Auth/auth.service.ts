@@ -49,7 +49,15 @@ const loginUserIntoDb = async (payload: TLoginUser) => {
   };
 };
 
-const changePasswordIntoDb = async () => {};
+const changePasswordIntoDb = async (
+  user: { userId: string; role: string },
+  payload
+) => {
+  const result = await User.findOneAndUpdate({
+    id: user.userId,
+    role: user.role,
+  });
+};
 
 //
 

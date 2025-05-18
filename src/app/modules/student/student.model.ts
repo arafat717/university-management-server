@@ -44,7 +44,7 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
       enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"],
     },
     contactNo: { type: String, required: true },
-    emergencyContactNo: { type: String, required: true, unique: true },
+    emergencyContactNo: { type: String, required: true },
     gender: {
       type: String,
       enum: {

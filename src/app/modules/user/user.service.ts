@@ -18,6 +18,7 @@ import { generateAdminId, generateFacultyId } from "./user.utilites";
 import { Admin } from "../admim/admin.model";
 
 const createStudentIntoDb = async (password: string, payload: TStudent) => {
+  // console.log(payload);
   const userData: Partial<TUser> = {};
   userData.password = password || (config.student_pass as string);
   userData.role = "student";
@@ -49,9 +50,10 @@ const createStudentIntoDb = async (password: string, payload: TStudent) => {
     await session.endSession();
 
     return newStudent;
-  } catch (err) {
+  } catch (err: any) {
     await session.abortTransaction();
     await session.endSession();
+    throw new Error(err);
   }
 };
 
