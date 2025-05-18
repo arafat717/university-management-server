@@ -2,8 +2,9 @@ import status from "http-status";
 import AppError from "../../error/AppError";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
+import bcrypt from "bcrypt";
 
 const loginUserIntoDb = async (payload: TLoginUser) => {
   //   checking if the use is not exists
@@ -50,13 +51,51 @@ const loginUserIntoDb = async (payload: TLoginUser) => {
 };
 
 const changePasswordIntoDb = async (
-  user: { userId: string; role: string },
-  payload
+  userData: JwtPayload,
+  payload: { oldPassword: string; newPassword: string }
 ) => {
-  const result = await User.findOneAndUpdate({
-    id: user.userId,
-    role: user.role,
-  });
+  const userExists = await User.isUserExistsByCustomId(userData?.userId);
+  if (!userExists) {
+    throw new AppError(status.NOT_FOUND, "This user is not found!");
+  }
+
+  //checking if the use is deleted
+  const isDeleted = userExists.isDeleted;
+  if (isDeleted) {
+    throw new AppError(status.NOT_FOUND, "This user is deleted!");
+  }
+
+  // checking if the use is blocked
+  const isBlocked = userExists.status;
+  if (isBlocked === "blocked") {
+    throw new AppError(status.NOT_FOUND, "This user is blocked!");
+  }
+
+  //   //   checking if the password is correct
+  if (
+    !(await User.isPasswordMatched(payload?.oldPassword, userExists?.password))
+  ) {
+    throw new AppError(status.FORBIDDEN, "Password do not matched!");
+  }
+
+  // hash new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_rount)
+  );
+
+  await User.findOneAndUpdate(
+    {
+      id: userData.userId,
+      role: userData.role,
+    },
+    {
+      password: newHashedPassword,
+      needsPasswordChange: false,
+      passwordChangeAt: new Date(),
+    }
+  );
+  return null;
 };
 
 //
