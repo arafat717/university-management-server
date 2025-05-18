@@ -49,8 +49,11 @@ const loginUserIntoDb = async (payload: TLoginUser) => {
   };
 };
 
+const changePasswordIntoDb = async () => {};
+
 //
 
 export const AuthService = {
   loginUserIntoDb,
+  changePasswordIntoDb,
 };
