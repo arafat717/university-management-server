@@ -2,9 +2,10 @@ import status from "http-status";
 import AppError from "../../error/AppError";
 import { User } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
-import jwt, { JwtPayload } from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 import config from "../../config";
 import bcrypt from "bcrypt";
+import { createToken } from "./utils";
 
 const loginUserIntoDb = async (payload: TLoginUser) => {
   //   checking if the use is not exists
@@ -40,12 +41,20 @@ const loginUserIntoDb = async (payload: TLoginUser) => {
     role: userExists.role,
   };
 
-  const accesstoken = jwt.sign(accessPayload, config.access_token as string, {
-    expiresIn: "10d",
-  });
+  const accesstoken = createToken(
+    accessPayload,
+    config.access_token as string,
+    config.ACCESS_SCERET_EXPIREIN as string
+  );
+  const refreshToken = createToken(
+    accessPayload,
+    config.REFRESH_SCERET as string,
+    config.REFRESH_SCERET_EXPIREIN as string
+  );
 
   return {
     accesstoken,
+    refreshToken,
     needsPasswordChange: userExists.needsPasswordChange,
   };
 };

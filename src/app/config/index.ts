@@ -11,4 +11,7 @@ export default {
   bcrypt_rount: process.env.BCRYPT_ROUNT,
   default_password: process.env.DEFAULT_PASS,
   access_token: process.env.ACCESS_SCERET,
+  REFRESH_SCERET: process.env.REFRESH_SCERET,
+  ACCESS_SCERET_EXPIREIN: process.env.ACCESS_SCERET_EXPIREIN,
+  REFRESH_SCERET_EXPIREIN: process.env.REFRESH_SCERET_EXPIREIN,
 };
