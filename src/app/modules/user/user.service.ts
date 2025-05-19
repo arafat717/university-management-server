@@ -16,6 +16,7 @@ import { TFaculty } from "../faculty/faculty.interface";
 import { AcademicDepartment } from "../academicDepartment/academicDepartment.model";
 import { generateAdminId, generateFacultyId } from "./user.utilites";
 import { Admin } from "../admim/admin.model";
+import { verifyToken } from "../Auth/utils";
 
 const createStudentIntoDb = async (password: string, payload: TStudent) => {
   // console.log(payload);
@@ -162,8 +163,25 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
   }
 };
 
+const getMe = async (token: string) => {
+  const decoded = verifyToken(token, config.access_token as string);
+  const { userId, role } = decoded;
+  let result = null;
+  if (role === "admin") {
+    result = await Admin.findOne({ id: userId });
+  }
+  if (role === "faculty") {
+    result = await Faculty.findOne({ id: userId });
+  }
+  if (role === "student") {
+    result = await Student.findOne({ id: userId });
+  }
+  return result;
+};
+
 export const UserService = {
   createStudentIntoDb,
   createFacultyIntoDB,
   createAdminIntoDB,
+  getMe,
 };
