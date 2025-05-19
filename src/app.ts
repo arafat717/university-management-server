@@ -14,9 +14,12 @@ import { courseRoute } from "./app/modules/Course/course.route";
 import { semisterRegistrationRoute } from "./app/modules/semisterRegistration/semisterRegistration.route";
 import { OfferedCourseRoute } from "./app/modules/OfferedCourse/OfferedCourse.route";
 import { autheRoute } from "./app/modules/Auth/auth.route";
+import cookieParser from "cookie-parser";
 
+// parser
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 
 // application route
 app.use("/api/v1/students", StudentRoute);
