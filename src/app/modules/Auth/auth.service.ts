@@ -166,8 +166,45 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const forgetPassword = async (userId: string) => {
+  const userExists = await User.isUserExistsByCustomId(userId);
+  if (!userExists) {
+    throw new AppError(status.NOT_FOUND, "This user is not found!");
+  }
+
+  //checking if the use is deleted
+  const isDeleted = userExists.isDeleted;
+  if (isDeleted) {
+    throw new AppError(status.NOT_FOUND, "This user is deleted!");
+  }
+
+  // checking if the use is blocked
+  const isBlocked = userExists.status;
+  if (isBlocked === "blocked") {
+    throw new AppError(status.NOT_FOUND, "This user is blocked!");
+  }
+
+  // create accesstoken
+
+  const accessPayload = {
+    userId: userExists.id,
+    role: userExists.role,
+  };
+
+  const accesstoken = createToken(
+    accessPayload,
+    config.access_token as string,
+    config.ACCESS_SCERET_EXPIREIN as string
+  );
+
+  const resetUiLink = `http://localhost:3000?id=${userExists.id}&token=${accesstoken}`;
+
+  console.log(resetUiLink);
+};
+
 export const AuthService = {
   loginUserIntoDb,
   changePasswordIntoDb,
   refreshToken,
+  forgetPassword,
 };
