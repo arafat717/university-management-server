@@ -30,6 +30,7 @@ export type TStudent = {
   presentAddress: string;
   permanentAddress: string;
   admissionSemester: Types.ObjectId;
+  profileImage: string;
   isDeleted: boolean;
   academicDepartment: Types.ObjectId;
   gurdian: Gurdian;
