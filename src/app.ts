@@ -15,6 +15,7 @@ import { semisterRegistrationRoute } from "./app/modules/semisterRegistration/se
 import { OfferedCourseRoute } from "./app/modules/OfferedCourse/OfferedCourse.route";
 import { autheRoute } from "./app/modules/Auth/auth.route";
 import cookieParser from "cookie-parser";
+import { enrolledCourseRoute } from "./app/modules/EnrolledCourse/enrolledCourse.route";
 
 // parser
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use("/api/v1/courses", courseRoute);
 app.use("/api/v1/registration", semisterRegistrationRoute);
 app.use("/api/v1/offeredcourse", OfferedCourseRoute);
 app.use("/api/v1/auth", autheRoute);
+app.use("/api/v1/enorlled-course", enrolledCourseRoute);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("server is running");
