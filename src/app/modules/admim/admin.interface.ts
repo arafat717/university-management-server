@@ -20,6 +20,7 @@ export type TUserName = {
 export type TAdmin = {
   id: string;
   user: Types.ObjectId;
+  password: string;
   designation: string;
   name: TUserName;
   gender: TGender;
@@ -29,8 +30,8 @@ export type TAdmin = {
   emergencyContactNo: string;
   bloogGroup?: TBloodGroup;
   presentAddress: string;
+  profileImage: string;
   permanentAddress: string;
-  profileImg?: string;
   isDeleted: boolean;
 };
 

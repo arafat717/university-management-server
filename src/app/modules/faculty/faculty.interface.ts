@@ -20,6 +20,7 @@ export type TUserName = {
 export type TFaculty = {
   id: string;
   user: Types.ObjectId;
+  password: string;
   designation: string;
   name: TUserName;
   gender: TGender;
@@ -29,6 +30,7 @@ export type TFaculty = {
   emergencyContactNo: string;
   bloogGroup?: TBloodGroup;
   presentAddress: string;
+  profileImage: string;
   permanentAddress: string;
   profileImg?: string;
   academicDepartment: Types.ObjectId;

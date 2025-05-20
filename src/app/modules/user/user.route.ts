@@ -25,13 +25,24 @@ router.post(
 
 router.post(
   "/create-faculty",
-
+  auth(USER_ROLE.admin),
+  upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(facultyValidations.createFacultyValidationSchema),
   userController.createFaculty
 );
 
 router.post(
   "/create-admin",
+  // auth(USER_ROLE.admin),
+  upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    next();
+  },
   validateRequest(createAdminValidationSchema),
   userController.createAdmin
 );
