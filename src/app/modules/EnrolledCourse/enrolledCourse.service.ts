@@ -10,6 +10,7 @@ import { SemisterRegistration } from "../semisterRegistration/semisterRegistrati
 import { Course } from "../Course/course.model";
 import { Faculty } from "../faculty/faculty.model";
 import { calculateGradeAndPoints } from "./enrolledCourse.utils";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 const enrolledCourse = async (userId: string, payload: TEnrolledCourse) => {
   const { offeredCourse } = payload;
@@ -211,7 +212,19 @@ const updateEnrolledCourseMarkIntoDb = async (
   return result;
 };
 
+const getAllCourseFromDb = async (query: Record<string, unknown>) => {
+  const registrationQuery = new QueryBuilder(EnrolledCourse.find(), query)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+  const meta = await registrationQuery.countTotal();
+  const result = await registrationQuery.modelQuery;
+  return { meta, result };
+};
+
 export const enrolledCourseService = {
   enrolledCourse,
   updateEnrolledCourseMarkIntoDb,
+  getAllCourseFromDb,
 };
