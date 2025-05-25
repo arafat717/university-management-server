@@ -61,8 +61,9 @@ const getAllSemisterRegistrationFromDb = async (
     .sort()
     .paginate()
     .fields();
+  const meta = await registrationQuery.countTotal();
   const result = await registrationQuery.modelQuery;
-  return result;
+  return { meta, result };
 };
 
 const getSingleSemisterRegistrationFromDb = async (id: string) => {

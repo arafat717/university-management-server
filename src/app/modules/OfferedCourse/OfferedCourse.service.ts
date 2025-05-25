@@ -110,8 +110,9 @@ const getAllOfferedCourseFromDb = async (query: Record<string, unknown>) => {
     .sort()
     .paginate()
     .fields();
+  const meta = await registrationQuery.countTotal();
   const result = await registrationQuery.modelQuery;
-  return result;
+  return { meta, result };
 };
 
 const getSingleOfferedCourseFromDb = async (id: string) => {
