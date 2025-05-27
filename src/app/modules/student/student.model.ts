@@ -60,6 +60,7 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
     },
     profileImage: {
       type: String,
+      default: "",
     },
     isDeleted: {
       type: Boolean,
@@ -68,6 +69,10 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
     academicDepartment: {
       type: Schema.Types.ObjectId,
       ref: "AcademicDepartment",
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: "AcademicFaculty",
     },
     permanentAddress: { type: String, required: true },
     gurdian: { type: GurdianSchema, required: true },

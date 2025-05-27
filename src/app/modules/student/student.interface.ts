@@ -29,10 +29,11 @@ export type TStudent = {
   gender: "male" | "female";
   presentAddress: string;
   permanentAddress: string;
-  admissionSemester: Types.ObjectId;
   profileImage: string;
   isDeleted: boolean;
+  admissionSemester: Types.ObjectId;
   academicDepartment: Types.ObjectId;
+  academicFaculty: Types.ObjectId;
   gurdian: Gurdian;
 };
 
