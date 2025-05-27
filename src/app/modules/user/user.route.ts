@@ -49,11 +49,20 @@ router.post(
 
 router.post(
   "/change-status/:id",
-  auth("admin"),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(userValidation.changeStatusValidationSchema),
   userController.changeStatus
 );
 
-router.get("/me", auth("student", "admin", "faculty"), userController.getMe);
+router.get(
+  "/me",
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student
+  ),
+  userController.getMe
+);
 
 export const UserRoute = router;

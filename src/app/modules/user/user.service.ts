@@ -23,7 +23,6 @@ const createStudentIntoDb = async (
   password: string,
   payload: TStudent
 ) => {
-  // console.log(payload);
   const userData: Partial<TUser> = {};
   userData.password = password || (config.student_pass as string);
   userData.role = "student";
@@ -193,7 +192,7 @@ const createAdminIntoDB = async (
     }
     // set id , _id as user
     payload.id = newUser[0].id;
-    payload.user = newUser[0]._id; //reference _id
+    payload.user = newUser[0]._id;
     payload.password = newUser[0].password;
     // create a admin (transaction-2)
     const newAdmin = await Admin.create([payload], { session });

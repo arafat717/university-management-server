@@ -22,7 +22,6 @@ export type NewUser = {
 export type TUserRole = keyof typeof USER_ROLE;
 
 export interface UserModel extends Model<TUser> {
-  // myStaticMethod(): number;
   isUserExistsByCustomId(id: string): Promise<TUser>;
   isPasswordMatched(
     plainTextPassword: string,
