@@ -20,6 +20,7 @@ router.get("/", AcademicDepartmentController.getAllDepartment);
 router.get("/:id", AcademicDepartmentController.getSingleDepartment);
 router.patch(
   "/:departmentId",
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
   validateRequest(
     academicDepartmentValidation.updateAcademicDepartmentValidationSchema
   ),

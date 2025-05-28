@@ -3,12 +3,13 @@ import validateRequest from "../../middlwares/validateRequest";
 import { enrolledCourseValidation } from "./enrolledCourse.validation";
 import { enrolledCourseController } from "./enrolledCourse.controller";
 import auth from "../../middlwares/auth";
+import { USER_ROLE } from "../user/user.constant";
 
 const router = express.Router();
 
 router.post(
   "/create-enrolled-course",
-  auth("student"),
+  auth(USER_ROLE.student),
   validateRequest(
     enrolledCourseValidation.createEnrolledCourseValidationZodSchema
   ),
@@ -17,7 +18,7 @@ router.post(
 
 router.patch(
   "/update-enrolled-course-marks",
-  auth("faculty"),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
   validateRequest(
     enrolledCourseValidation.updateCourseEnrollMarksValidationZodSchema
   ),

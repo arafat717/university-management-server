@@ -52,9 +52,25 @@ router.put(
   CourseController.assignfaculltiesWithCourse
 );
 
+router.get(
+  "/:courseId/get-faculties",
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student
+  ),
+  CourseController.getFaculltiesWithCourse
+);
+
 router.delete(
   "/:courseId/remove-faculties",
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.faculty,
+    USER_ROLE.student
+  ),
   validateRequest(CourseValidations.facultiesWithCourseValidationSchema),
   CourseController.removefaculltiesWithCourse
 );
