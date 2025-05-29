@@ -9,6 +9,7 @@ import { TOfferedCourse } from "./OfferedCourse.interface";
 import { OfferedCourse } from "./OfferedCourse.model";
 import status from "http-status";
 import { hasTimeConflict } from "./OfferedCourse.utils";
+import { Student } from "../student/student.model";
 
 const createOfferedCourseIntoDb = async (payload: TOfferedCourse) => {
   const {
@@ -209,10 +210,26 @@ const deleteOfferedCourseFromDB = async (id: string) => {
   return result;
 };
 
+const getMyOfferedCourseFromDb = async (userId: string) => {
+  const student = await Student.findOne({ id: userId });
+  if (!student) {
+    throw new AppError(status.NOT_FOUND, "Student not found!");
+  }
+
+  const currentOnGoingSemester = await SemisterRegistration.findOne({
+    status: "ONGOING",
+  });
+  if (!currentOnGoingSemester) {
+    throw new AppError(status.NOT_FOUND, "Semester not found!");
+  }
+  return currentOnGoingSemester;
+};
+
 export const OfferedCourseService = {
   createOfferedCourseIntoDb,
   getAllOfferedCourseFromDb,
   getSingleOfferedCourseFromDb,
   updateOfferedCourseIntoDb,
   deleteOfferedCourseFromDB,
+  getMyOfferedCourseFromDb,
 };
