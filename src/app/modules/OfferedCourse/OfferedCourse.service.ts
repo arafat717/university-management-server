@@ -212,6 +212,7 @@ const deleteOfferedCourseFromDB = async (id: string) => {
 
 const getMyOfferedCourseFromDb = async (userId: string) => {
   const student = await Student.findOne({ id: userId });
+  console.log(student);
   if (!student) {
     throw new AppError(status.NOT_FOUND, "Student not found!");
   }
@@ -220,9 +221,31 @@ const getMyOfferedCourseFromDb = async (userId: string) => {
     status: "ONGOING",
   });
   if (!currentOnGoingSemester) {
-    throw new AppError(status.NOT_FOUND, "Semester not found!");
+    throw new AppError(
+      status.NOT_FOUND,
+      "There is no Ongoing Semester not found!"
+    );
   }
-  return currentOnGoingSemester;
+
+  const result = await OfferedCourse.aggregate([
+    {
+      $match: {
+        semesterRegistration: currentOnGoingSemester?._id,
+        academicFaculty: student.academicFaculty,
+        academicDepartmenet: student.academicDepartment,
+      },
+    },
+    {
+      $lookup: {
+        from: "courses",
+        localField: "course",
+        foreignField: "_id",
+        as: "course",
+      },
+    },
+  ]);
+
+  return result;
 };
 
 export const OfferedCourseService = {
