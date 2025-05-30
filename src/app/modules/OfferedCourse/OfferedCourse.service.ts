@@ -212,7 +212,6 @@ const deleteOfferedCourseFromDB = async (id: string) => {
 
 const getMyOfferedCourseFromDb = async (userId: string) => {
   const student = await Student.findOne({ id: userId });
-  console.log(student);
   if (!student) {
     throw new AppError(status.NOT_FOUND, "Student not found!");
   }
