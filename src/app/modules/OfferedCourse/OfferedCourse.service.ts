@@ -242,6 +242,43 @@ const getMyOfferedCourseFromDb = async (userId: string) => {
         as: "course",
       },
     },
+    {
+      $unwind: "$course",
+    },
+    {
+      $lookup: {
+        from: "enrolledcourses",
+        let: {
+          currentOnGoingSemester: currentOnGoingSemester._id,
+          currentstudent: student._id,
+        },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $and: [
+                  {
+                    $eq: ["$semesterRegistration", "$$currentOnGoingSemester"],
+                  },
+                  {
+                    $eq: ["$student", "$$currentstudent"],
+                  },
+                  {
+                    $eq: ["$isEnrolled", true],
+                  },
+                ],
+              },
+            },
+          },
+        ],
+        as: "enrolledcourses",
+      },
+    },
+    {
+      $addFields: {
+        $in,
+      },
+    },
   ]);
 
   return result;
