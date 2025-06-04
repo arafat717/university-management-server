@@ -13,7 +13,7 @@ const updateCourseEnrollMarksValidationZodSchema = z.object({
     student: z.string(),
     courseMarks: z.object({
       classTest1: z.number().optional(),
-      midterm: z.number().optional(),
+      midTerm: z.number().optional(),
       classTest2: z.number().optional(),
       finalTerm: z.number().optional(),
     }),
