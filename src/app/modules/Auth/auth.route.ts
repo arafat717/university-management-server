@@ -26,12 +26,12 @@ router.post(
 
 router.post(
   "/refresh-token",
-  auth(
-    USER_ROLE.superAdmin,
-    USER_ROLE.admin,
-    USER_ROLE.faculty,
-    USER_ROLE.student
-  ),
+  // auth(
+  //   USER_ROLE.superAdmin,
+  //   USER_ROLE.admin,
+  //   USER_ROLE.faculty,
+  //   USER_ROLE.student
+  // ),
   validateRequest(AuthValidation.refreshTokenValidationSchema),
   AuthController.refreshToken
 );
