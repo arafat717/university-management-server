@@ -78,9 +78,15 @@ const studentSchema = new Schema<TStudent, StudentModel, StudentMethod>(
     gurdian: { type: GurdianSchema, required: true },
   },
   {
-    timestamps: true,
+    toJSON: {
+      virtuals: true,
+    },
   }
 );
+
+studentSchema.virtual("fullName").get(function () {
+  return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName;
+});
 
 studentSchema.methods.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
