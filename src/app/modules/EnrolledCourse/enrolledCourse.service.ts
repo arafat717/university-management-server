@@ -212,6 +212,38 @@ const updateEnrolledCourseMarkIntoDb = async (
   return result;
 };
 
+const getMyEnrolledCoursesFromDB = async (
+  studentId: string,
+  query: Record<string, unknown>
+) => {
+  const student = await Student.findOne({ id: studentId });
+
+  if (!student) {
+    throw new AppError(status.NOT_FOUND, "Student not found !");
+  }
+
+  const enrolledCourseQuery = new QueryBuilder(
+    EnrolledCourse.find({ student: student._id })
+      .populate(
+        "academicSemester academicFaculty academicDepartment offeredCourse course student faculty"
+      )
+      .populate({ path: "semesterRegistration", strictPopulate: false }),
+    query
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await enrolledCourseQuery.modelQuery;
+  const meta = await enrolledCourseQuery.countTotal();
+
+  return {
+    meta,
+    result,
+  };
+};
+
 const getAllCourseFromDb = async (query: Record<string, unknown>) => {
   const registrationQuery = new QueryBuilder(EnrolledCourse.find(), query)
     .filter()
@@ -227,4 +259,5 @@ export const enrolledCourseService = {
   enrolledCourse,
   updateEnrolledCourseMarkIntoDb,
   getAllCourseFromDb,
+  getMyEnrolledCoursesFromDB,
 };
